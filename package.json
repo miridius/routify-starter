@@ -44,5 +44,10 @@
     "extensions": "svelte,html,svx,md",
     "dynamicImports": true,
     "routifyDir": ".routify"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "arrowParens": "avoid"
   }
 }
