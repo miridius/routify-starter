@@ -1,6 +1,7 @@
 import { createRollupConfigs } from './scripts/base.config.js'
 import { configMerger } from './scripts/config-utils'
 import svelteConfig from './svelte.config.js'
+import typescript from '@rollup/plugin-typescript'
 
 const production = !process.env.ROLLUP_WATCH
 
@@ -10,7 +11,9 @@ export const config = {
   buildDir: `dist/build`,
   serve: !production,
   production,
-  rollupWrapper: rollup => rollup,
+  rollupWrapper: configMerger({
+    plugins: [typescript({ sourceMap: !production })],
+  }),
   svelteWrapper: configMerger(svelteConfig),
   swWrapper: worker => worker,
 }
