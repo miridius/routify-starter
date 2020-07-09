@@ -1,8 +1,9 @@
 import { createRollupConfigs } from './scripts/base.config.js'
+import { configMerger } from './scripts/config-utils'
 import autoPreprocess from 'svelte-preprocess'
 import postcssImport from 'postcss-import'
 
-const production = !process.env.ROLLUP_WATCH;
+const production = !process.env.ROLLUP_WATCH
 
 export const config = {
   staticDir: 'static',
@@ -11,13 +12,14 @@ export const config = {
   serve: !production,
   production,
   rollupWrapper: rollup => rollup,
-  svelteWrapper: svelte => {
-    svelte.preprocess = [
+  svelteWrapper: configMerger({
+    preprocess: [
       autoPreprocess({
         postcss: { plugins: [postcssImport()] },
-        defaults: { style: 'postcss' }
-      })]
-  },
+        defaults: { style: 'postcss' },
+      }),
+    ],
+  }),
   swWrapper: worker => worker,
 }
 
@@ -38,6 +40,16 @@ export default configs
     cfg.plugins = [...cfg.plugins, myPlugin()]
     return cfg
   }
+
+  // The configMerger function builds a wrapper which merges in new config
+
+  import { configMerger } from './scripts/config-utils'
+
+  svelteWrapper: configMerger({
+    preprocess: mdsvex({ extension: '.md' }),
+  })
+
+  rollupWrapper: configMerger({
+    plugins: [myPlugin()],
+  })
 */
-
-
